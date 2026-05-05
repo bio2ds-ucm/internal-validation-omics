@@ -1,0 +1,53 @@
+# --------------------------------------------------------------------------
+# CITATION.cff — Citation metadata for this repository
+# Citation File Format v1.2.0 — https://citation-file-format.github.io/
+#
+# GitHub will detect this file automatically and show a "Cite this repository"
+# button at the top right of the repo page.
+# --------------------------------------------------------------------------
+
+cff-version: 1.2.0
+message: "If you use this code, please cite both the paper and this software archive."
+title: "Code for: Internal validation strategies for high-dimensional transcriptomic prediction modeling"
+type: software
+authors:
+  - family-names: "Peressini Álvarez"
+    given-names: "Melina"
+    affiliation: "Hospital Universitario 12 de Octubre Research Institute & Faculty of Statistical Studies, Universidad Complutense de Madrid"
+    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
+  - family-names: "Pineda San Juan"
+    given-names: "Silvia"
+    affiliation: "Faculty of Statistical Studies, Universidad Complutense de Madrid"
+    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
+repository-code: "https://github.com/bio2ds-ucm/paper-bioinformatics-2026"
+license: MIT
+keywords:
+  - bioinformatics
+  - transcriptomics
+  - high-dimensional-data
+  - lasso
+  - penalized-regression
+  - internal-validation
+  - cross-validation
+  - bootstrap
+  - calibration
+  - reproducible-research
+  - r
+  - bio2ds-ucm
+
+# --------------------------------------------------------------------------
+# Once the paper is published, uncomment and fill in the "preferred-citation"
+# block below so users citing this software automatically cite the paper too.
+# --------------------------------------------------------------------------
+
+# preferred-citation:
+#   type: article
+#   title: "Internal validation strategies for high-dimensional transcriptomic prediction modeling"
+#   authors:
+#     - family-names: "Peressini Álvarez"
+#       given-names: "Melina"
+#     - family-names: "Pineda San Juan"
+#       given-names: "Silvia"
+#   journal: "Bioinformatics"
+#   year: 2026
+#   doi: "[DOI of the paper]"
