@@ -1,0 +1,78 @@
+# --------------------------------------------------------------------------
+# .gitignore — Files and folders Git should NOT track
+# --------------------------------------------------------------------------
+
+# ===== R session and history =====
+.Rhistory
+.RData
+.Ruserdata
+.Rapp.history
+
+# ===== R package builds =====
+*.Rcheck/
+*.tar.gz
+*-Ex.R
+
+# ===== RStudio =====
+.Rproj.user/
+
+# ===== Quarto / R Markdown =====
+*.html
+*.pdf
+_book/
+_site/
+.quarto/
+
+# ===== Operating system files =====
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+.~lock.*
+
+# ===== Editors =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== Raw transcriptomic data =====
+# Never commit raw omics data — they are large and may have access restrictions
+data/raw/
+data/processed/
+*.bam
+*.bai
+*.vcf
+*.vcf.gz
+*.fastq
+*.fastq.gz
+*.fq.gz
+*.h5
+*.bigwig
+*.bw
+*.RData
+*.rds
+
+# ===== Sensitive files =====
+.env
+*.key
+*.pem
+config.local.*
+credentials.*
+
+# ===== Intermediate results from the experiment =====
+# Fitted LASSO models, predictions, and other intermediate outputs are
+# heavy and reproducible. They go under results/intermediate/ and are not
+# tracked. Final figures (PDFs in results/figures/) and tables (CSVs in
+# results/tables/) ARE tracked.
+results/intermediate/
+*.rds.large
+
+# ===== Logs and temporary files =====
+*.log
+tmp/
+temp/
+.cache/
+
+# ===== Exception: keep .gitkeep files =====
+!.gitkeep
