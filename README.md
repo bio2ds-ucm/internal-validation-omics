@@ -140,5 +140,3 @@ For questions about the code, please [open an issue](https://github.com/bio2ds-u
 ------------------------------------------------------------------------
 
 <sub>Maintained by the [BIO2DS-UCM](https://github.com/bio2ds-ucm) research group · Universidad Complutense de Madrid</sub>
-
-Esto es una prueba
