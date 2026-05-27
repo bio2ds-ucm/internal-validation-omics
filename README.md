@@ -1,13 +1,12 @@
-# Internal validation strategies for high-dimensional transcriptomic prediction modeling
+# Internal validation strategies for high-dimensional transcriptomic prediction modeling in Ultra-High Dimensional Transcriptomic Settings
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: in preparation](https://img.shields.io/badge/status-in%20preparation-orange)](#)
 
 > Code and analysis pipeline accompanying the paper:
 >
-> **Peressini Álvarez, M., Pineda San Juan, S.** *Internal validation strategies for high-dimensional transcriptomic prediction modeling: a comparative study using real-world data*. Submitted to *Bioinformatics*, 2026.
+> **Peressini M., Calviño A, Medrano E, Zugazagoitia J, Pineda, S.** *Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study*. Submitted to *Bioinformatics*, 2026.
 >
-> *Title and authors are provisional and will be updated upon submission.*
 
 ---
 
@@ -21,8 +20,8 @@ The study compares five resampling-based validation strategies — 20-rep 5-fold
 
 ## 👥 Authors
 
-- **Melina Peressini Álvarez** — Hospital Universitario 12 de Octubre Research Institute · Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
-- **Silvia Pineda San Juan** — Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+- **Melina Peressini** — Hospital Universitario 12 de Octubre Research Institute · Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+- **Silvia Pineda ** — Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
 
 This work was carried out within the [BIO2DS-UCM](https://github.com/bio2ds-ucm) research group (Biomedical Data Science and Biostatistics, Universidad Complutense de Madrid).
 
@@ -139,14 +138,14 @@ If you use this code, please cite both the paper and the software archive (DOI t
 ```bibtex
 @article{peressini2026validation,
   title   = {Internal validation strategies for high-dimensional transcriptomic prediction modeling},
-  author  = {Peressini {\'A}lvarez, Melina and Pineda San Juan, Silvia},
+  author  = {Peressini M., Calviño A, Medrano E, Zugazagoitia J, Pineda, S.},
   journal = {Bioinformatics},
   year    = {2026},
   doi     = {[DOI]}
 }
 
 @software{peressini2026code,
-  author    = {Peressini {\'A}lvarez, Melina and Pineda San Juan, Silvia},
+  author    = {Peressini, Melina and Pineda, Silvia},
   title     = {Code for: Internal validation strategies for high-dimensional transcriptomic prediction modeling},
   year      = {2026},
   publisher = {Zenodo},
@@ -165,6 +164,7 @@ This code is released under the [MIT License](LICENSE).
 
 For questions about the code, please [open an issue](https://github.com/bio2ds-ucm/internal-validation-omics/issues) in this repository or contact:
 
+- Melina Peressini - [mperessi@ucm.es](mailto:mperessi@ucm.es)
 - Silvia Pineda San Juan — [sipineda@ucm.es](mailto:sipineda@ucm.es)
 
 ---
