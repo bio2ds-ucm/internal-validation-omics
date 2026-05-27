@@ -21,8 +21,7 @@ The study compares five resampling-based validation strategies — 20-rep 5-fold
 ## 👥 Authors
 
 - **Melina Peressini** — Hospital Universitario 12 de Octubre Research Institute · Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
-- **Silvia Pineda ** — Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
-
+  
 This work was carried out within the [BIO2DS-UCM](https://github.com/bio2ds-ucm) research group (Biomedical Data Science and Biostatistics, Universidad Complutense de Madrid).
 
 ## 📁 Repository structure
@@ -145,7 +144,7 @@ If you use this code, please cite both the paper and the software archive (DOI t
 }
 
 @software{peressini2026code,
-  author    = {Peressini, Melina and Pineda, Silvia},
+  author    = {Peressini, Melina},
   title     = {Code for: Internal validation strategies for high-dimensional transcriptomic prediction modeling},
   year      = {2026},
   publisher = {Zenodo},
@@ -165,7 +164,7 @@ This code is released under the [MIT License](LICENSE).
 For questions about the code, please [open an issue](https://github.com/bio2ds-ucm/internal-validation-omics/issues) in this repository or contact:
 
 - Melina Peressini - [mperessi@ucm.es](mailto:mperessi@ucm.es)
-- Silvia Pineda San Juan — [sipineda@ucm.es](mailto:sipineda@ucm.es)
+- Silvia Pineda — [sipineda@ucm.es](mailto:sipineda@ucm.es)
 
 ---
 
