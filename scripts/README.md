@@ -1,56 +1,63 @@
 # `scripts/` — Analysis pipeline
 
-This folder contains numbered scripts that reproduce the full benchmark study presented in the paper. Scripts must be run **in order**.
+This folder contains the numbered scripts that reproduce the full study. The pipeline is split into two parallel sub-pipelines (one per dataset) plus a shared figure-generation script.
 
-## Pipeline
+## Structure
 
-| Script | Purpose | Approx. runtime |
-|---|---|---|
-| `00-setup.R` | Load libraries, define paths, set global seeds | < 1 min |
-| `01-data-preparation.R` | Load and preprocess MMDx-Kidney and SCAN-B datasets | minutes |
-| `02-generate-scenarios.R` | Generate three discrimination scenarios + 100 training subsets per scenario | minutes |
-| `03-run-experiment.R` | **Main loop**: fit LASSO + apply 5 validation strategies × all scenarios × all training subsets | **hours/days** (HPC needed) |
-| `04-collect-results.R` | Consolidate all intermediate results into tidy data frames | minutes |
-| `05-figures-main.R` | Generate Figures 1–5 of the paper | < 10 min |
-| `06-figures-supplementary.R` | Generate Supplementary Figures S1–S7 | < 10 min |
-| `07-tables.R` | Generate Table 1 of the paper | < 5 min |
-
-## How to run
-
-For a small-scale local run (with reduced parameters), execute scripts in order:
-
-```bash
-Rscript scripts/00-setup.R
-Rscript scripts/01-data-preparation.R
-Rscript scripts/02-generate-scenarios.R
-Rscript scripts/03-run-experiment.R
-Rscript scripts/04-collect-results.R
-Rscript scripts/05-figures-main.R
-Rscript scripts/06-figures-supplementary.R
-Rscript scripts/07-tables.R
+```
+scripts/
+├── GSE275126_code/                # MMDx-Kidney pipeline (microarray)
+│   ├── 1_GSE275126_data_processing.R
+│   ├── 2_GSE275126_simulated_scenarios.R
+│   ├── 3_GSE275126_execution_scenario1.R
+│   ├── 4_GSE275126_execution_scenario2.R
+│   ├── 5_GSE275126_execution_scenario3.R
+│   ├── 6_GSE275126_UMAP.R
+│   ├── 7_GSE275126_compute_estimates.R
+│   └── 8_GSE275126_DGE_analysis.R
+├── GSE202203_code/                # SCAN-B pipeline (RNA-seq)
+│   └── (same 8 numbered scripts)
+└── 9_Figure_generation.R          # Shared figure and table generation
 ```
 
-For full reproduction (with the same parameters as the paper), launch each `03-run-experiment.R` call in parallel on a multi-core machine, e.g. with `nohup`:
+## Pipeline stages (per dataset)
 
-```bash
-nohup Rscript scripts/03-run-experiment.R mmdx-kidney excellent > mmdx-excellent.log 2>&1 &
-nohup Rscript scripts/03-run-experiment.R mmdx-kidney moderate  > mmdx-moderate.log 2>&1 &
-# ...etc.
-```
+| Stage | Script | Purpose | Runtime |
+|---|---|---|---|
+| 1 | `1_*_data_processing.R` | Download from GEO + preprocess (normalize, transform). For MMDx-Kidney: RMA on CEL files. For SCAN-B: VST on raw counts. | minutes |
+| 2 | `2_*_simulated_scenarios.R` | Generate the three discrimination scenarios by permuting the outcome in 0% / 30% / 100% of samples. | < 1 min |
+| 3–5 | `3_*_execution_scenarioX.R` | **Heavy:** run the experiment for each scenario (≈ 500 LASSO fits with nested tuning, evaluated under 5 validation strategies). Can be run in parallel. | hours |
+| 6 | `6_*_UMAP.R` | UMAP for dataset characterization (Supplementary Figures S1, S2). | minutes |
+| 7 | `7_*_compute_estimates.R` | Consolidate scenario results into tidy data frames for figure generation. | < 5 min |
+| 8 | `8_*_DGE_analysis.R` | Differential gene expression analysis with limma-trend for dataset characterization. | minutes |
 
-## Conventions
+## Final stage (shared)
 
-- Each script is **self-contained** and can be run independently as long as previous scripts have been executed.
-- Use `here::here()` (package `here`) for all paths — never `setwd()` or absolute paths.
-- Source reusable functions from `R/` at the top of each script:
-  ```r
-  library(here)
-  source(here("R", "validation-strategies.R"))
-  ```
-- Save intermediate outputs to `results/intermediate/` so the next script can read them.
-- Each script has a header documenting:
-  - Author and date
-  - Brief description
-  - Inputs (files needed)
-  - Outputs (files generated)
-  - Approximate runtime
+| Script | Purpose |
+|---|---|
+| `9_Figure_generation.R` | Generates all figures (Figs 1–6, S1–S12) and supplementary tables. **Must be run twice** — once for each dataset — by editing the `dataset` variable at the top of the script. |
+
+## Execution order
+
+For full reproduction:
+
+1. Run stages 1–8 for `GSE275126` and `GSE202203` (the two sub-pipelines can be run in parallel).
+2. Within each sub-pipeline, scripts must be run in numerical order (1 → 8). Scripts 3, 4, 5 can be parallelized.
+3. Run `9_Figure_generation.R` twice (once per dataset).
+
+See the main [`../README.md`](../README.md) for the complete command sequence.
+
+## Parallelization
+
+The experiment is computationally heavy. Several types of parallelization are used:
+
+- **Within R**: `fitting_and_validation()` (in `R/required_functions.R`) uses `furrr`/`future` and `parallel::mclapply()` to parallelize the simulations across cores. Adjust `ncores` in `R/global_parameters.R` (default: 50) to your hardware.
+- **Across scripts**: scripts 3, 4, 5 (the three scenario executions per dataset) are independent and can be launched in separate terminals or via `nohup` to run in parallel.
+
+## Inputs and outputs
+
+- **Inputs**: raw data files in `data/raw/` (see [`../data/README.md`](../data/README.md) for how to obtain them).
+- **Intermediate outputs**: written to `results/intermediate/` (not tracked by Git).
+- **Final outputs**: figures (TIFF) in `results/figures/`, tables (XLSX) in `results/tables/`.
+
+All paths in the scripts use `here::here()`, so the pipeline works regardless of where the repository is cloned, as long as the user opens it as an RStudio project or runs the scripts from the project root.

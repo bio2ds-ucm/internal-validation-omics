@@ -18,7 +18,6 @@
 
 # ===== Quarto / R Markdown =====
 *.html
-*.pdf
 _book/
 _site/
 .quarto/
@@ -37,7 +36,8 @@ desktop.ini
 *.swo
 
 # ===== Raw transcriptomic data =====
-# Never commit raw omics data — they are large and may have access restrictions
+# Never commit raw omics data — they are large and may have access restrictions.
+# The pipeline downloads them from GEO. See data/README.md for details.
 data/raw/
 data/processed/
 *.bam
@@ -50,8 +50,9 @@ data/processed/
 *.h5
 *.bigwig
 *.bw
-*.RData
-*.rds
+*.CEL
+*.CEL.gz
+*.tsv.gz
 
 # ===== Sensitive files =====
 .env
@@ -62,11 +63,10 @@ credentials.*
 
 # ===== Intermediate results from the experiment =====
 # Fitted LASSO models, predictions, and other intermediate outputs are
-# heavy and reproducible. They go under results/intermediate/ and are not
-# tracked. Final figures (PDFs in results/figures/) and tables (CSVs in
-# results/tables/) ARE tracked.
+# heavy and reproducible. They are saved under results/intermediate/.
+# Final figures (TIFF in results/figures/) and tables (XLSX in results/tables/)
+# ARE tracked so reviewers can see them without re-running the pipeline.
 results/intermediate/
-*.rds.large
 
 # ===== Logs and temporary files =====
 *.log

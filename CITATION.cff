@@ -19,7 +19,7 @@ authors:
     given-names: "Silvia"
     affiliation: "Faculty of Statistical Studies, Universidad Complutense de Madrid"
     # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
-repository-code: "https://github.com/bio2ds-ucm/paper-bioinformatics-2026"
+repository-code: "https://github.com/bio2ds-ucm/internal-validation-omics"
 license: MIT
 keywords:
   - bioinformatics
