@@ -11,13 +11,9 @@ message: "If you use this code, please cite both the paper and this software arc
 title: "Code for: Internal validation strategies for high-dimensional transcriptomic prediction modeling"
 type: software
 authors:
-  - family-names: "Peressini Álvarez"
+  - family-names: "Peressini"
     given-names: "Melina"
     affiliation: "Hospital Universitario 12 de Octubre Research Institute & Faculty of Statistical Studies, Universidad Complutense de Madrid"
-    # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
-  - family-names: "Pineda San Juan"
-    given-names: "Silvia"
-    affiliation: "Faculty of Statistical Studies, Universidad Complutense de Madrid"
     # orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
 repository-code: "https://github.com/bio2ds-ucm/internal-validation-omics"
 license: MIT
@@ -44,9 +40,9 @@ keywords:
 #   type: article
 #   title: "Internal validation strategies for high-dimensional transcriptomic prediction modeling"
 #   authors:
-#     - family-names: "Peressini Álvarez"
+#     - family-names: "Peressini"
 #       given-names: "Melina"
-#     - family-names: "Pineda San Juan"
+#     - family-names: "Pineda"
 #       given-names: "Silvia"
 #   journal: "Bioinformatics"
 #   year: 2026
