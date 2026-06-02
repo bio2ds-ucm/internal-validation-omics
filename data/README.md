@@ -22,7 +22,6 @@ The `raw/` and `processed/` subfolders are excluded from Git. After download, pl
 Affymetrix PrimeView microarray gene expression from kidney transplant biopsies included in the MMDx-Kidney studies.
 
 - **GEO accession**: [GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126)
-- **CEL files**: [GSE275126_RAW.tar](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE275126&format=file)
 - **Technology**: microarray (Affymetrix PrimeView)
 - **Sample size**: 5,086 biopsies
 - **Outcome**: binary rejection (yes/no), derived from `rej7aaclust` classification (NR = no, anything else = yes)
@@ -30,7 +29,7 @@ Affymetrix PrimeView microarray gene expression from kidney transplant biopsies 
 ### How to obtain
 
 1. Visit [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126).
-2. Download the supplementary `.tar` archive containing the CEL files `GSE275126_RAW.tar` (raw microarray intensities)
+2. Download the supplementary `.tar` archive containing the CEL files [GSE275126_RAW.tar](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE275126&format=file) (raw microarray intensities)
 3. Extract all `.CEL` files into:
 
    ```
@@ -54,7 +53,6 @@ Implemented in `scripts/GSE275126_code/1_GSE275126_data_processing.R`:
 RNA-sequencing data from invasive primary breast cancer tumors included in the SCAN-B study, with PAM50 molecular subtype classification.
 
 - **GEO accession**: [GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203)
-- **Raw count matrix**: [GSE202203_RawCounts_gene_3207.tsv.gz](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE202203&format=file&file=GSE202203%5FRawCounts%5Fgene%5F3207%2Etsv%2Egz)
 - **Technology**: RNA-seq
 - **Sample size**: 2,854 tumors (after excluding unclassified PAM50 tumors)
 - **Outcome**: binary Luminal A subtype (yes/no), derived from `pam50 subtype:ch1` (LumA = yes, anything else = no)
@@ -62,7 +60,7 @@ RNA-sequencing data from invasive primary breast cancer tumors included in the S
 ### How to obtain
 
 1. Visit [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203).
-2. Download the supplementary file `GSE202203_RawCounts_gene_3207.tsv` (gene-level raw count matrix).
+2. Download the supplementary file [GSE202203_RawCounts_gene_3207.tsv.gz](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE202203&format=file&file=GSE202203%5FRawCounts%5Fgene%5F3207%2Etsv%2Egz) (gene-level raw count matrix).
 3. Place it in:
 
    ```
