@@ -9,7 +9,7 @@ data/
 ├── README.md      # this file
 ├── raw/           # raw downloads from GEO (gitignored)
 │   ├── GSE275126_raw/   # CEL files for MMDx-Kidney
-│   └── GSE202203_raw/   # raw counts  for SCAN-B
+│   └── GSE202203_raw/   # raw count matrix for SCAN-B
 └── processed/     # preprocessed data (gitignored)
 ```
 
@@ -19,11 +19,11 @@ The `raw/` and `processed/` subfolders are excluded from Git. After download, pl
 
 ## Dataset 1 — MMDx-Kidney (GSE275126)
 
-Affymetrix PrimeView microarray gene expression from kidney transplant biopsies, with rejection phenotypes determined by the MMDx algorithm.
+Affymetrix PrimeView microarray gene expression from kidney transplant biopsies included in the MMDx-Kidney studies.
 
 - **GEO accession**: [GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126)
 - **CEL files**: [GSE275126_RAW.tar](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE275126&format=file)
-- **Technology**: microarray (Affymetrix PrimeView, ENTREZG re-annotation)
+- **Technology**: microarray (Affymetrix PrimeView)
 - **Sample size**: 5,086 biopsies
 - **Outcome**: binary rejection (yes/no), derived from `rej7aaclust` classification (NR = no, anything else = yes)
 
@@ -51,7 +51,7 @@ Implemented in `scripts/GSE275126_code/1_GSE275126_data_processing.R`:
 
 ## Dataset 2 — SCAN-B (GSE202203)
 
-RNA-sequencing data from invasive primary breast cancer tumors of the SCAN-B (Sweden Cancerome Analysis Network — Breast) project, with PAM50 molecular subtypes.
+RNA-sequencing data from invasive primary breast cancer tumors included in the SCAN-B study, with PAM50 molecular subtype classification.
 
 - **GEO accession**: [GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203)
 - **Raw count matrix**: [GSE202203_RawCounts_gene_3207.tsv.gz](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE202203&format=file&file=GSE202203%5FRawCounts%5Fgene%5F3207%2Etsv%2Egz)
