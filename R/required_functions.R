@@ -392,14 +392,15 @@ bootstrap <- function(x_matrix,
 # fitting_and_validation
 
 # - Randomly samples 100 different training datasets from the corresponding full dataset;
-# the remaining observations form the large, independent evaluation set
+# the remaining observations form the large, independent evaluation set (used
+# for computing "true" performance)
 
 # - On each training dataset, fits several LASSO logistic models, each using a 
 # different resampling-based strategy (repeated K-fold CV, regular BS, .632 BS) 
 # for AUC estimation during penalty hyperparameter tuning
 
 # - For each of these models, computes post-development performance:
-#  (i) true performance (i.e., on independent evaluation data)
+#  (i) true performance (i.e., on independent evaluation set)
 #  (ii) estimates from repeated K-fold CV and bootstrap methods (apparent performance, 
 # performance on the original training dataset, and OOB performance; required to 
 # obtain the final estimates from regular BS, .632 BS, and .632+ BS)
