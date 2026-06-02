@@ -1,3 +1,10 @@
+# DESCRIPTION:
+# GSE202203 data
+# Bind results from all scenarios
+# Compute final post-development performance estimates from bootstrap methods
+# (regular BS, .632 BS, and .632+ BS) and differences between estimates and true
+# performance
+
 # LIBRARIES ----
 library(here)
 library(dplyr)
