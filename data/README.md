@@ -8,8 +8,8 @@ This study uses two **publicly available** transcriptomic cohorts from the Gene 
 data/
 ├── README.md      # this file
 ├── raw/           # raw downloads from GEO (gitignored)
-│   ├── GSE275126_microarray/   # CEL files for MMDx-Kidney
-│   └── GSE202203_rnaseq/       # raw counts TSV for SCAN-B
+│   ├── GSE275126_raw/   # CEL files for MMDx-Kidney
+│   └── GSE202203_raw/   # raw counts  for SCAN-B
 └── processed/     # preprocessed data (gitignored)
 ```
 
@@ -22,18 +22,19 @@ The `raw/` and `processed/` subfolders are excluded from Git. After download, pl
 Affymetrix PrimeView microarray gene expression from kidney transplant biopsies, with rejection phenotypes determined by the MMDx algorithm.
 
 - **GEO accession**: [GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126)
+- **CEL files**: [GSE275126_RAW.tar](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE275126&format=file)
 - **Technology**: microarray (Affymetrix PrimeView, ENTREZG re-annotation)
-- **Sample size**: ~5,000 biopsies
+- **Sample size**: 5,086 biopsies
 - **Outcome**: binary rejection (yes/no), derived from `rej7aaclust` classification (NR = no, anything else = yes)
 
 ### How to obtain
 
 1. Visit [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126).
-2. Download the supplementary CEL files (raw microarray intensities). They will arrive as a `.tar` archive.
+2. Download the supplementary `.tar` archive containing the CEL files `GSE275126_RAW.tar` (raw microarray intensities)
 3. Extract all `.CEL` files into:
 
    ```
-   data/raw/GSE275126_microarray/
+   data/raw/GSE275126_raw/
    ```
 
 4. Metadata (phenotypes) is downloaded automatically by the script `scripts/GSE275126_code/1_GSE275126_data_processing.R` via the `GEOquery` package.
@@ -44,7 +45,7 @@ Implemented in `scripts/GSE275126_code/1_GSE275126_data_processing.R`:
 
 - RMA normalization with custom CDF (`primeviewhsentrezgcdf`) to obtain gene-level expression.
 - Binary outcome construction.
-- Final dataset saved to `results/intermediate/GSE275126_microarray_data.rds`.
+- Final dataset saved to `data/processed/GSE275126_processed_data.rds`.
 
 ---
 
@@ -53,14 +54,15 @@ Implemented in `scripts/GSE275126_code/1_GSE275126_data_processing.R`:
 RNA-sequencing data from invasive primary breast cancer tumors of the SCAN-B (Sweden Cancerome Analysis Network — Breast) project, with PAM50 molecular subtypes.
 
 - **GEO accession**: [GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203)
+- **Raw count matrix**: [GSE202203_RawCounts_gene_3207.tsv.gz](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE202203&format=file&file=GSE202203%5FRawCounts%5Fgene%5F3207%2Etsv%2Egz)
 - **Technology**: RNA-seq
-- **Sample size**: 2,854 tumors (after excluding unclassified PAM50)
-- **Outcome**: binary Luminal A subtype (yes/no), derived from PAM50 classification
+- **Sample size**: 2,854 tumors (after excluding unclassified PAM50 tumors)
+- **Outcome**: binary Luminal A subtype (yes/no), derived from `pam50 subtype:ch1` (LumA = yes, anything else = no)
 
 ### How to obtain
 
 1. Visit [https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203).
-2. Download the supplementary file `GSE202203_RawCounts_gene_3207.tsv` (gene-level raw counts).
+2. Download the supplementary file `GSE202203_RawCounts_gene_3207.tsv` (gene-level raw count matrix).
 3. Place it in:
 
    ```
@@ -76,7 +78,7 @@ Implemented in `scripts/GSE202203_code/1_GSE202203_data_processing.R`:
 - Filter out tumors with `Unclassified` PAM50 subtype.
 - Upper-quantile normalization with `EDASeq`.
 - Variance Stabilizing Transformation (VST) with `DESeq2`.
-- Final dataset saved to `results/intermediate/GSE202203_rnaseq_data.rds`.
+- Final dataset saved to `data/processed/GSE202203_processed_data.rds`.
 
 ---
 
