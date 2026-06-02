@@ -64,7 +64,7 @@ See [`data/README.md`](data/README.md) for download and preprocessing instructio
 
 - **R version 4.4.1** (the version used for the paper).
 - R packages used in the pipeline:
-  - Core analysis: `glmnet`, `caret`, `pROC`, `logistf`, `furrr`, `future`, `parallel`
+  - Core analysis: `glmnet`, `caret`, `pROC`, `logistf`, `furrr`, `future`
   - Data wrangling: `dplyr`, `tibble`, `tidyr`, `stringr`, `tidyverse`, `data.table`
   - Plotting: `ggplot2`, `ggdist`, `ggplotify`, `cowplot`, `scales`
   - Bioinformatics (data processing): `GEOquery`, `affy`, `primeviewhsentrezgcdf` (Bioconductor) for microarray; `EDASeq`, `edgeR`, `DESeq2`, `limma` (Bioconductor) for RNA-seq
