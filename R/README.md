@@ -7,7 +7,7 @@ This folder contains code that is **sourced** by the pipeline scripts but is not
 | File | Purpose |
 |---|---|
 | `global_parameters.R` | Experiment-wide settings: master seed, number of simulations (`nsim`), training set size (`nsubjects_train`), LASSO lambda grid length, *k* values for k-fold CV, repetitions, number of bootstrap samples (`nboot`), and number of cores for parallelization (`ncores`). |
-| `required_functions.R` | All the core machinery of the experiment: LASSO grid construction (`lasso_grid_search`), model fitting with internal tuning (`model_fitting`), performance metrics including AUC and calibration slope (`performance`), repeated k-fold CV (`repeated_cv`), bootstrap variants — regular, .632, .632+ (`bootstrap`), tuning performance evaluation across all strategies (`tuning_performance`), and the main pipeline functions (`fitting_and_validation` and its parallel version `fitting_and_validation_mclapply`). |
+| `required_functions.R` | All the core machinery of the experiment: LASSO grid construction (`lasso_grid_search`), model fitting with internal tuning (`model_fitting`), performance metrics including AUC and calibration slope (`performance`), repeated k-fold CV (`repeated_cv`), bootstrapping (`bootstrap`), and the main pipeline function (`fitting_and_validation`). |
 
 ## How they are used
 
