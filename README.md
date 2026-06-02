@@ -1,4 +1,4 @@
-# Internal validation strategies for high-dimensional transcriptomic prediction modeling in Ultra-High Dimensional Transcriptomic Settings
+# Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: in preparation](https://img.shields.io/badge/status-in%20preparation-orange)](#)
@@ -20,7 +20,7 @@ The study compares five resampling-based validation strategies — 20-rep 5-fold
 
 ## 👥 Authors
 
-- **Melina Peressini** — Hospital Universitario 12 de Octubre Research Institute · Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+- **Melina Peressini** — Instituto de Investigación Sanitaria Hospital 12 de Octubre (imas12) · Faculty of Statistical Studies, Universidad Complutense de Madrid · BIO2DS-UCM · [ORCID](https://orcid.org/my-orcid?orcid=0009-0008-7844-2067)
   
 This work was carried out within the [BIO2DS-UCM](https://github.com/bio2ds-ucm) research group (Biomedical Data Science and Biostatistics, Universidad Complutense de Madrid).
 
@@ -54,7 +54,7 @@ This study uses two publicly available transcriptomic cohorts from GEO:
 
 | Dataset | GEO accession | Technology | Outcome | n samples |
 |---|---|---|---|---|
-| MMDx-Kidney | [GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126) | Microarray (Affymetrix PrimeView) | Kidney transplant rejection (yes/no) | ~5,000 |
+| MMDx-Kidney | [GSE275126](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126) | Microarray (Affymetrix PrimeView) | Kidney transplant rejection (yes/no) | 5,086 |
 | SCAN-B | [GSE202203](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203) | RNA-seq | Breast cancer Luminal A subtype (yes/no) | 2,854 |
 
 See [`data/README.md`](data/README.md) for download and preprocessing instructions.
