@@ -42,5 +42,5 @@ After running `scripts/9_Figure_generation.R` twice (once per dataset), this fol
 - `Supp_File_auc_MMDx-Kidney dataset.xlsx`, `Supp_File_auc_SCAN-B dataset.xlsx`
 - `Supp_File_slope_MMDx-Kidney dataset.xlsx`, `Supp_File_slope_SCAN-B dataset.xlsx`
 
-> Note: Supplementary File of the paper combines the results from these four tables into a single file, with each table on a separate sheet.
+> Note: Supplementary File of the paper combines the results from these four tables into a single .xlsx file, with each table on a separate sheet.
 
