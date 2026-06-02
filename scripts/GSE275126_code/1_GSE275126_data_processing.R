@@ -1,6 +1,6 @@
 # DESCRIPTION:
 # GSE275126 data
-# Microarray data processing
+# Microarray data processing, RMA normalization with custom CDF to obtain gene-level expression
 # Obtaining final data, containing expression data and outcome of interest
 
 # LIBRARIES ----
@@ -15,6 +15,10 @@ library(GEOquery)
 # PROCESS EXPRESSION DATA ----
 
 # 1. RMA ----
+
+# CEL files downloaded from GEO:
+# https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126
+# Supplementary File GSE275126_RAW.tar)
 
 # Path for CEL files
 cel_path <- here::here("data", "raw", "GSE275126_microarray/")
@@ -46,6 +50,7 @@ geo_data <- getGEO("GSE275126", GSEMatrix = TRUE)
 # Metadata
 geo_metadata <- pData(phenoData(geo_data[[1]]))
 
+# Check dimensions
 geo_metadata |>
   dim()
 
@@ -135,5 +140,8 @@ expr_data |>
 data |>
   dim()
 
+# SAVE PROCESSED DATA ----
+path_save <- here::here("data", "processed")
+
 saveRDS(data,
-        here::here("results", "intermediate", "GSE275126_microarray_data.rds"))
+        file = paste0(path_save, "/GSE275126_processed_data.rds"))
