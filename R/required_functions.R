@@ -391,7 +391,8 @@ bootstrap <- function(x_matrix,
 
 # fitting_and_validation
 
-# - Randomly samples 100 different training datasets from the corresponding full dataset
+# - Randomly samples 100 different training datasets from the corresponding full dataset;
+# the remaining observations form the large, independent evaluation set
 
 # - On each training dataset, fits several LASSO logistic models, each using a 
 # different resampling-based strategy (repeated K-fold CV, regular BS, .632 BS) 
