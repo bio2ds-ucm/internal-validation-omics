@@ -10,11 +10,15 @@ library(pROC)
 library(logistf)
 library(furrr)
 library(future)
-library(parallel) 
 
 select <- dplyr::select
 
 # LAMBDA GRID (for LASSO) ----
+
+# lasso_grid_search:
+# Sets grid of lambda values (length 100) according to
+# Friedman, J., Hastie, T. and Tibshirani, R. (2010) ‘Regularization Paths for Generalized Linear Models via Coordinate Descent’
+
 lasso_grid_search <- function(x_matrix, 
                               y_vector, 
                               positive_class,
@@ -46,7 +50,16 @@ lasso_grid_search <- function(x_matrix,
 }
 
 # MODEL FITTING ----
-# Tuning method: "repeatedcv", "optimism_boot", "boot632"
+
+# model_fitting:
+
+# Fits LASSO logistic model
+# - the tuning of the lambda penalty parameter is done based on maximizing the
+# estimated AUC
+# - the AUC is estimated using the specified resampling-based strategy: 
+# "repeatedcv", "optimism_boot", "boot632" (i.e., the methods under evaluation 
+# implemented in the `caret` library)
+
 model_fitting <- function(x_matrix,
                           y_vector,
                           tuning_method,
@@ -121,6 +134,15 @@ model_fitting <- function(x_matrix,
 }
   
 # PERFORMANCE METRICS ----
+
+# performance:
+
+# Computes performance metrics (AUC, calibration slope) for a given
+# model on a specific dataset
+
+# - calibration slope is computed both using standard logistic regression and 
+# Firth's penalized logistic regression in order to check for convergence issues
+
 performance <- function(fit,
                         newx,
                         newy){
@@ -190,6 +212,15 @@ performance <- function(fit,
 
 
 # REPEATED K-FOLD CV ----
+
+# repeated_cv:
+
+# Performs repeated K-fold cross-validation for post-development performance estimation
+# (AUC and calibration slope)
+
+# - the full modelling pipeline, including penalty hyperparameter tuning, 
+# is repeated within each resampling iteration 
+
 repeated_cv <- function(x_matrix,
                         y_vector,
                         positive_class,
@@ -262,6 +293,20 @@ repeated_cv <- function(x_matrix,
 }
 
 # BOOTSTRAP ----
+
+# bootstrap:
+
+# Performs bootstrapping for post-development performance estimation (AUC and 
+# calibration slope), computing for each bootstrap sample: 
+
+# (i) apparent performance, 
+# (ii) performance on the original dataset
+# (iii) out-of-bag (OOB) performance,
+# required to obtain the final estimates from regular BS, .632 BS, and .632+ BS
+
+# - the full modelling pipeline, including penalty hyperparameter tuning, 
+# is repeated within each resampling iteration 
+
 bootstrap <- function(x_matrix,
                       y_vector,
                       positive_class = "positive",
@@ -340,212 +385,23 @@ bootstrap <- function(x_matrix,
   mean_results
 }
 
-# MODEL FITTING USING DIFFERENT METHODS FOR HYPERPARAMETER TUNING ----
-tuning_performance <- function(x_matrix,
-                               y_vector,
-                               positive_class){
-  
-  future::plan(multisession, workers = ncores)
-  
-  fitting_results <- future_map(1:nsim, function(sim){
-    
-    # Split in train and test ----
-    train_ind <- sample(1:nrow(x_matrix), size = nsubjects_train)
-    
-    # Check that there are subjects from both subgroups in train sample
-    check_cond <- (y_vector[train_ind] |> unique() |> length()) > 1
-    
-    if(check_cond){
-      
-      # Grid for hyperparameter tuning ----
-      tuning_grid <- lasso_grid_search(x_matrix = x_matrix[train_ind, ],
-                                       y_vector = y_vector[train_ind],
-                                       positive_class = positive_class,
-                                       grid_length = grid_length)
-      
-      # Model fitting using 20-time repeated 5-fold CV -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "repeatedcv",
-                           number = k[1],
-                           repeats = rep[1],
-                           grid = tuning_grid)
-      
-      fit_20rep_5fold_coefs <- fit$coefs |> t()
-      
-      
-      # 2. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 3. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      
-      fit_repcv_k5_results <- list(fit,
-                                   fit_test_perf) |>
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "20rep_5fold")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_test_perf)
-      
-      # Model fitting using 10-time repeated 10-fold CV -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "repeatedcv",
-                           number = k[2],
-                           repeats = rep[2],
-                           grid = tuning_grid)
-      
-      fit_10rep_10fold_coefs <- fit$coefs |> t()
-      
-      # 2. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 3. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      
-      fit_repcv_k10_results <- list(fit,
-                                    fit_test_perf) |>
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "10rep_10fold")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_test_perf)
-      
-      # Model fitting using optimism bootstrap -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "optimism_boot",
-                           number = nboot,
-                           repeats = NULL,
-                           grid = tuning_grid)
-      
-      fit_optboot_coefs <- fit$coefs |> t()
-      
-      # 2. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 3. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      
-      fit_optboot_results <- list(fit,
-                                  fit_test_perf) |>
-        
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "optboot")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_test_perf)
-      
-      # Model fitting using .632 bootstrap -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "boot632",
-                           number = nboot,
-                           repeats = NULL,
-                           grid = tuning_grid)
-      
-      fit_boot632_coefs <- fit$coefs |> t()
-      
-      # 2. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 3. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      
-      fit_boot632_results <- list(fit,
-                                  fit_test_perf) |>
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "boot632")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_test_perf)
-      
-      # Bind results ----
-      
-      # Bind coefficient matrices
-      coefs <- Reduce(Matrix::rbind2, list(fit_20rep_5fold_coefs,
-                                           fit_10rep_10fold_coefs,
-                                           fit_optboot_coefs,
-                                           fit_boot632_coefs))
-      
-      # Columns to add: simulation and tuning method
-      # For tuning method:
-      # 1 = 20rep_5fold CV
-      # 2 = 10rep_5fold CV
-      # 3 = OPTBOOT
-      # 4 = BOOT632
-      sim_col <- Matrix(rep(sim, 4), sparse = TRUE,
-                        dimnames = list(NULL, "sim"))
-      
-      tuning_col <- Matrix(1:4, sparse = TRUE,
-                           dimnames = list(NULL, "tuning"))
-      
-      # Add defined columns
-      coefs <- Reduce(Matrix::cbind2, list(coefs,
-                                           sim_col,
-                                           tuning_col))
-      
-      # Global results
-      results <- list(fit_repcv_k5_results,
-                      fit_repcv_k10_results,
-                      fit_optboot_results,
-                      fit_boot632_results) |>
-        bind_rows()
-      
-      # List to return
-      list(results = results,
-           coefs = coefs)
-    }
-  }, .options = furrr_options(seed = TRUE))
-  
-  plan(sequential)
-  
-  fitting_results
-}
-
 
 # MODEL FITTING AND INTERNAL VALIDATION ----
+
+# fitting_and_validation
+
+# - Randomly samples 100 different training datasets from the corresponding full dataset
+
+# - On each training dataset, fits several LASSO logistic models, each using a 
+# different resampling-based strategy (repeated K-fold CV, regular BS, .632 BS) 
+# for AUC estimation during penalty hyperparameter tuning
+
+# - For each of these models, computes post-development performance:
+#  (i) true performance (i.e., on independent evaluation data)
+#  (ii) estimates from repeated K-fold CV and bootstrap methods (apparent performance, 
+# performance on the original training dataset, and OOB performance; required to 
+# obtain the final estimates from regular BS, .632 BS, and .632+ BS)
+
 fitting_and_validation <- function(x_matrix,
                                    y_vector,
                                    positive_class){
@@ -936,390 +792,3 @@ fitting_and_validation <- function(x_matrix,
   
   validation_results
 }
-
-fitting_and_validation_mclapply <- function(x_matrix,
-                                   y_vector,
-                                   positive_class){
-
-  validation_results <- mclapply(1:nsim, function(sim){
-    
-    # Split in train and test ----
-    train_ind <- sample(1:nrow(x_matrix), size = nsubjects_train)
-    
-    # Check that there are subjects from both subgroups in train sample
-    check_cond <- (y_vector[train_ind] |> unique() |> length()) > 1
-    
-    if(check_cond){
-      
-      # Grid for hyperparameter tuning ----
-      tuning_grid <- lasso_grid_search(x_matrix = x_matrix[train_ind, ],
-                                       y_vector = y_vector[train_ind],
-                                       positive_class = positive_class,
-                                       grid_length = grid_length)
-      
-      # Model fitting using 20-time repeated 5-fold CV -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "repeatedcv",
-                           number = k[1],
-                           repeats = rep[1],
-                           grid = tuning_grid)
-      
-      fit_20rep_5fold_coefs <- fit$coefs |> t()
-      
-      # 2. Apparent performance ----
-      fit_app_perf <- performance(fit = fit$fit,
-                                  newx = x_matrix[train_ind, ],
-                                  newy = y_vector[train_ind])
-      
-      
-      # 3. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      
-      # 4. Validation via 20-time repeated 5-fold CV ----
-      val_repcv_k5 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                  y_vector = y_vector[train_ind],
-                                  positive_class = positive_class,
-                                  nfolds = k[1],
-                                  nrep = rep[1],
-                                  tuning_method = "repeatedcv",
-                                  tuning_number = k[1],
-                                  tuning_repeats = k[1])
-      
-      # 5. Validation via 10-time repeated 10-fold CV ----
-      val_repcv_k10 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                   y_vector = y_vector[train_ind],
-                                   positive_class = positive_class,
-                                   nfolds = k[2],
-                                   nrep = rep[2],
-                                   tuning_method = "repeatedcv",
-                                   tuning_number = k[1],
-                                   tuning_repeats = k[1])
-      
-      # 6. Validation via bootstrap ----
-      val_boot <- bootstrap(x_matrix = x_matrix[train_ind, ],
-                            y_vector = y_vector[train_ind],
-                            positive_class = positive_class,
-                            nboot = nboot,
-                            tuning_method = "repeatedcv",
-                            tuning_number = k[1],
-                            tuning_repeats = k[1])
-      
-      # 7. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_app_perf) <- paste0(names(fit_app_perf), "_app")
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      names(val_repcv_k5) <- paste0(names(val_repcv_k5), "_20rep5foldCV")
-      names(val_repcv_k10) <- paste0(names(val_repcv_k10), "_10rep10foldCV")
-      names(val_boot) <- paste0(names(val_boot), "_boot")
-      
-      fit_repcv_k5_results <- list(fit,
-                                   fit_app_perf,
-                                   fit_test_perf,
-                                   val_repcv_k5,
-                                   val_repcv_k10,
-                                   val_boot) |>
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "20rep_5fold")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_app_perf,
-         fit_test_perf,
-         val_repcv_k5,
-         val_repcv_k10,
-         val_boot)
-      
-      # Model fitting using 10-time repeated 10-fold CV -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "repeatedcv",
-                           number = k[2],
-                           repeats = rep[2],
-                           grid = tuning_grid)
-      
-      fit_10rep_10fold_coefs <- fit$coefs |> t()
-      
-      # 2. Apparent performance ----
-      fit_app_perf <- performance(fit = fit$fit,
-                                  newx = x_matrix[train_ind, ],
-                                  newy = y_vector[train_ind])
-      
-      
-      # 3. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      
-      # 4. Validation via 20-time repeated 5-fold CV ----
-      val_repcv_k5 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                  y_vector = y_vector[train_ind],
-                                  positive_class = positive_class,
-                                  nfolds = k[1],
-                                  nrep = rep[1],
-                                  tuning_method = "repeatedcv",
-                                  tuning_number = k[2],
-                                  tuning_repeats = k[2])
-      
-      # 5. Validation via 10-time repeated 10-fold CV ----
-      val_repcv_k10 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                   y_vector = y_vector[train_ind],
-                                   positive_class = positive_class,
-                                   nfolds = k[2],
-                                   nrep = rep[2],
-                                   tuning_method = "repeatedcv",
-                                   tuning_number = k[2],
-                                   tuning_repeats = k[2])
-      
-      # 6. Validation via bootstrap ----
-      val_boot <- bootstrap(x_matrix = x_matrix[train_ind, ],
-                            y_vector = y_vector[train_ind],
-                            positive_class = positive_class,
-                            nboot = nboot,
-                            tuning_method = "repeatedcv",
-                            tuning_number = k[2],
-                            tuning_repeats = k[2])
-      
-      # 7. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_app_perf) <- paste0(names(fit_app_perf), "_app")
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      names(val_repcv_k5) <- paste0(names(val_repcv_k5), "_20rep5foldCV")
-      names(val_repcv_k10) <- paste0(names(val_repcv_k10), "_10rep10foldCV")
-      names(val_boot) <- paste0(names(val_boot), "_boot")
-      
-      fit_repcv_k10_results <- list(fit,
-                                    fit_app_perf,
-                                    fit_test_perf,
-                                    val_repcv_k5,
-                                    val_repcv_k10,
-                                    val_boot) |>
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "10rep_10fold")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_app_perf,
-         fit_test_perf,
-         val_repcv_k5,
-         val_repcv_k10,
-         val_boot)
-      
-      # Model fitting using optimism bootstrap -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "optimism_boot",
-                           number = nboot,
-                           repeats = NULL,
-                           grid = tuning_grid)
-      
-      fit_optboot_coefs <- fit$coefs |> t()
-      
-      # 2. Apparent performance ----
-      fit_app_perf <- performance(fit = fit$fit,
-                                  newx = x_matrix[train_ind, ],
-                                  newy = y_vector[train_ind])
-      
-      # 3. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 4. Validation via 20-time repeated 5-fold CV ----
-      val_repcv_k5 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                  y_vector = y_vector[train_ind],
-                                  positive_class = positive_class,
-                                  nfolds = k[1],
-                                  nrep = rep[1],
-                                  tuning_method = "optimism_boot",
-                                  tuning_number = nboot,
-                                  tuning_repeats = NULL)
-      
-      # 5. Validation via 10-time repeated 10-fold CV ----
-      val_repcv_k10 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                   y_vector = y_vector[train_ind],
-                                   positive_class = positive_class,
-                                   nfolds = k[2],
-                                   nrep = rep[2],
-                                   tuning_method = "optimism_boot",
-                                   tuning_number = nboot,
-                                   tuning_repeats = NULL)
-      
-      # 6. Validation via bootstrap ----
-      val_boot <- bootstrap(x_matrix = x_matrix[train_ind, ],
-                            y_vector = y_vector[train_ind],
-                            positive_class = positive_class,
-                            nboot = nboot,
-                            tuning_method = "optimism_boot",
-                            tuning_number = nboot,
-                            tuning_repeats = NULL)
-      
-      # # 7. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_app_perf) <- paste0(names(fit_app_perf), "_app")
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      names(val_repcv_k5) <- paste0(names(val_repcv_k5), "_20rep5foldCV")
-      names(val_repcv_k10) <- paste0(names(val_repcv_k10), "_10rep10foldCV")
-      names(val_boot) <- paste0(names(val_boot), "_boot")
-      
-      fit_optboot_results <- list(fit,
-                                  fit_app_perf,
-                                  fit_test_perf,
-                                  val_repcv_k5,
-                                  val_repcv_k10,
-                                  val_boot) |>
-        
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "optboot")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_app_perf,
-         fit_test_perf,
-         val_repcv_k5,
-         val_repcv_k10,
-         val_boot)
-      
-      # Model fitting using .632 bootstrap -----
-      
-      # 1. Model fitting ----
-      fit <- model_fitting(x_matrix = x_matrix[train_ind, ],
-                           y_vector = y_vector[train_ind],
-                           tuning_method = "boot632",
-                           number = nboot,
-                           repeats = NULL,
-                           grid = tuning_grid)
-      
-      fit_boot632_coefs <- fit$coefs |> t()
-      
-      # 2. Apparent performance ----
-      fit_app_perf <- performance(fit = fit$fit,
-                                  newx = x_matrix[train_ind, ],
-                                  newy = y_vector[train_ind])
-      
-      # 3. Test performance ----
-      fit_test_perf <- performance(fit = fit$fit,
-                                   newx = x_matrix[-train_ind, ],
-                                   newy = y_vector[-train_ind])
-      
-      # 4. Validation via 20-time repeated 5-fold CV ----
-      val_repcv_k5 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                  y_vector = y_vector[train_ind],
-                                  positive_class = positive_class,
-                                  nfolds = k[1],
-                                  nrep = rep[1],
-                                  tuning_method = "boot632",
-                                  tuning_number = nboot,
-                                  tuning_repeats = NULL)
-      
-      # 5. Validation via 10-time repeated 10-fold CV ----
-      val_repcv_k10 <- repeated_cv(x_matrix = x_matrix[train_ind, ],
-                                   y_vector = y_vector[train_ind],
-                                   positive_class = positive_class,
-                                   nfolds = k[2],
-                                   nrep = rep[2],
-                                   tuning_method = "boot632",
-                                   tuning_number = nboot,
-                                   tuning_repeats = NULL)
-      
-      # 6. Validation via bootstrap ----
-      val_boot <- bootstrap(x_matrix = x_matrix[train_ind, ],
-                            y_vector = y_vector[train_ind],
-                            positive_class = positive_class,
-                            nboot = nboot,
-                            tuning_method = "boot632",
-                            tuning_number = nboot,
-                            tuning_repeats = NULL)
-      
-      # # 7. Results ----
-      fit <- fit[-c(1, 2)] |> 
-        unlist()
-      names(fit_app_perf) <- paste0(names(fit_app_perf), "_app")
-      names(fit_test_perf) <- paste0(names(fit_test_perf), "_test")
-      names(val_repcv_k5) <- paste0(names(val_repcv_k5), "_20rep5foldCV")
-      names(val_repcv_k10) <- paste0(names(val_repcv_k10), "_10rep10foldCV")
-      names(val_boot) <- paste0(names(val_boot), "_boot")
-      
-      fit_boot632_results <- list(fit,
-                                  fit_app_perf,
-                                  fit_test_perf,
-                                  val_repcv_k5,
-                                  val_repcv_k10,
-                                  val_boot) |>
-        
-        unlist() |>
-        t() |>
-        as_tibble() |>
-        mutate(sim = sim,
-               tuning_method = "boot632")
-      
-      # Remove objects after saving results
-      rm(fit,
-         fit_app_perf,
-         fit_test_perf,
-         val_repcv_k5,
-         val_repcv_k10,
-         val_boot)
-      
-      # Bind results ----
-      
-      # Bind coefficient matrices
-      coefs <- Reduce(Matrix::rbind2, list(fit_20rep_5fold_coefs,
-                                           fit_10rep_10fold_coefs,
-                                           fit_optboot_coefs,
-                                           fit_boot632_coefs))
-      
-      # Columns to add: simulation and tuning method
-      # For tuning method:
-      # 1 = 20rep_5fold CV
-      # 2 = 10rep_5fold CV
-      # 3 = OPTBOOT
-      # 4 = BOOT632
-      sim_col <- Matrix(rep(sim, 4), sparse = TRUE,
-                        dimnames = list(NULL, "sim"))
-      
-      tuning_col <- Matrix(1:4, sparse = TRUE,
-                           dimnames = list(NULL, "tuning"))
-      
-      # Add defined columns
-      coefs <- Reduce(Matrix::cbind2, list(coefs,
-                                           sim_col,
-                                           tuning_col))
-      
-      # Global results
-      results <- list(fit_repcv_k5_results,
-                      fit_repcv_k10_results,
-                      fit_optboot_results,
-                      fit_boot632_results) |>
-        bind_rows()
-      
-      # List to return
-      list(results = results,
-           coefs = coefs)
-    }
-  }, mc.cores = ncores)
-  validation_results
-}
-
