@@ -1,3 +1,7 @@
+# DESCRIPTION:
+# GSE202203
+# Dimensionality reduction (UMAP algorithm)
+
 # LIBRARIES ----
 library(here)
 library(dplyr)
