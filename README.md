@@ -86,7 +86,7 @@ BiocManager::install(c("GEOquery", "affy", "primeviewhsentrezgcdf",
 
 ## 🚀 How to reproduce the analysis
 
-The full experiment is **computationally heavy**. It was run on a multi-core workstation with 50 cores (`ncores = 50` in `R/global_parameters.R` — adjust to your hardware). Plan for several hours per (dataset × scenario) combination.
+The full experiment is **computationally heavy**. It was run on a multi-core workstation with 50 cores (`ncores = 50` in `R/global_parameters.R` — adjust to your hardware). Plan for several days per (dataset × scenario) combination.
 
 Run the pipeline in order. For each dataset:
 
