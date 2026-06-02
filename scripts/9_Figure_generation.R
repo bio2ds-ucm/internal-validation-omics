@@ -838,7 +838,7 @@ auc_table <- auc_true_table |>
             n = sum(!is.na(diff))) 
 
 write.xlsx(auc_table,
-           file = here::here("results", "tables", paste0("Supp_File_F1_auc", dataset, ".xlsx")))
+           file = here::here("results", "tables", paste0("Supp_File_auc_", dataset, ".xlsx")))
 
 
 # Figure
@@ -1043,7 +1043,7 @@ cal_table <- cal_true_table |>
             n = sum(!is.na(diff))) 
 
 write.xlsx(cal_table,
-           file = here::here("results", "tables", paste0("Supp_File_F3_calibration_slope_", dataset, ".xlsx")))
+           file = here::here("results", "tables", paste0("Supp_File_slope_", dataset, ".xlsx")))
 
 # Figure
 cal_est_diff <- ggplot(val_res_cal_diff |>
