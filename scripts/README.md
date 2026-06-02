@@ -29,7 +29,7 @@ scripts/
 | 3–5 | `3_*_execution_scenarioX.R` | **Heavy:** run the experiment for each scenario (400 LASSO fits with nested tuning, evaluated under 5 validation strategies). Can be run in parallel. | **days** |
 | 6 | `6_*_UMAP.R` | UMAP for dataset characterization (Supplementary Figures S1, S2). | minutes |
 | 7 | `7_*_compute_estimates.R` | Consolidate scenario results into tidy data frames for figure generation. | minutes |
-| 8 | `8_*_DGE_analysis.R` | Differential gene expression analysis with limma-trend for dataset characterization. | minutes |
+| 8 | `8_*_DGE_analysis.R` | Differential gene expression analysis with limma-trend for dataset characterization and identification of weakly informative genes. | minutes |
 
 ## Final stage (shared)
 
