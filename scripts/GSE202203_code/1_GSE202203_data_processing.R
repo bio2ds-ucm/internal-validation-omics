@@ -1,6 +1,6 @@
 # DESCRIPTION:
 # GSE202203 data
-# RNAseq data processing
+# RNAseq data processing, including normalization (upper-quartile method) and VST transformation
 # Obtaining final data, containing expression data and outcome of interest
 
 # LIBRARIES ----
@@ -47,11 +47,13 @@ geo_metadata$lumA_subtype |>
 
 # LOAD EXPRESSION DATA ----
 
-# GSE202203_RawCounts_gene_3207.tsv download from GEO
+# Raw count matrix downloaded from GEO:
+# https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE202203 
+# (Supplementary File GSE202203_RawCounts_gene_3207.tsv)
 
-path <- here::here("data", "raw", "GSE202203_rnaseq/")
+path <- here::here("data", "raw", "GSE202203_raw")
 
-expr_mat <- fread(file = paste0(path, "GSE202203_RawCounts_gene_3207.tsv")) |>
+expr_mat <- fread(file = paste0(path, "/GSE202203_RawCounts_gene_3207.tsv")) |>
   as.data.frame()
 
 # Set rownames
@@ -72,6 +74,7 @@ expr_mat |>
   colnames() |>
   head()
 
+# Check correspondence
 all(rownames(geo_metadata) %in% colnames(expr_mat))
 
 
@@ -110,12 +113,9 @@ vsd <- varianceStabilizingTransformation(dds, blind = FALSE)
 
 norm_vst <- assay(vsd)
 
+# Check dimensions
 norm_vst |>
   dim()
-# 19644  2854
-
-saveRDS(norm_vst,
-         here::here("results", "intermediate", "GSE202203_norm_matrix.rds"))
 
 # FINAL DATAFRAME ----
 
@@ -143,15 +143,14 @@ data <- geo_metadata |>
 # Check dimensions after joining
 geo_metadata |>
   dim()
-# [1] 2854    2
 
 expr_data |>
   dim()
-# [1]  2854 19645
 
 data |>
   dim()
-# [1]  2854 19645
+
+path_save <- here::here("data", "processed")
 
 saveRDS(data,
-        here::here("results", "intermediate", "GSE202203_rnaseq_data.rds"))
+        file = paste0(path_save, "/GSE202203_processed_data.rds"))
