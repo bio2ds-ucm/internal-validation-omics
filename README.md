@@ -12,9 +12,9 @@
 
 ## 📋 Overview
 
-This repository contains the R code for a benchmark study of internal validation strategies (repeated *k*-fold cross-validation and bootstrap variants) applied to LASSO logistic regression in ultra-high dimensional (p≫n) transcriptomic settings.
+This repository contains the R code for a benchmark study of internal validation strategies (repeated *K*-fold cross-validation and bootstrap variants) applied to LASSO logistic regression in ultra-high dimensional (p ≫ n) transcriptomic settings.
 
-The study compares five resampling-based validation strategies — 20-rep 5-fold CV, 10-rep 10-fold CV, regular bootstrap, .632 bootstrap, and .632+ bootstrap — across three discrimination scenarios (excellent, moderate, null) and two real-world transcriptomic datasets, evaluating both performance estimation (AUC, calibration slope) and the impact of validation choice on hyperparameter tuning.
+The study compares five standard resampling-based validation strategies — 20-rep 5-fold CV, 10-rep 10-fold CV, regular bootstrap, .632 bootstrap, and .632+ bootstrap — across three discrimination scenarios (excellent, moderate, null) simulated from two large-scale real-world transcriptomic datasets, evaluating both post-development performance estimation (AUC, calibration slope) and the impact of validation choice on hyperparameter tuning.
 
 > ⚠️ This README is preliminary. It will be updated with full abstract and results summary upon submission.
 
