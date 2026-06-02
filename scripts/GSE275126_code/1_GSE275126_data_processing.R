@@ -18,7 +18,7 @@ library(GEOquery)
 
 # CEL files downloaded from GEO:
 # https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE275126
-# Supplementary File GSE275126_RAW.tar)
+# (Supplementary File GSE275126_RAW.tar)
 
 # Path for CEL files
 cel_path <- here::here("data", "raw", "GSE275126_raw")
