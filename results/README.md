@@ -6,14 +6,14 @@ Auto-generated outputs from running the analysis pipeline.
 
 ```
 results/
-├── intermediate/   # Fitted LASSO models, predictions, consolidated data (gitignored)
+├── intermediate/   # Simulated data and results from the fitted LASSO models across the 100 simulations (gitignored)
 ├── figures/        # TIFF figures of the paper (tracked)
 └── tables/         # XLSX supplementary tables (tracked)
 ```
 
 ## Why `intermediate/` is gitignored
 
-The intermediate results contain `.rds` and `.RData` files corresponding to the simulated data and results from the 400 fitted LASSO models, including coefficients and performance values, per (dataset × scenario) combination. These files can total several GB and are fully reproducible from the input data via the scripts under `../scripts/`. Tracking them in Git would bloat the repository without benefit.
+The intermediate results contain `.rds` and `.RData` files corresponding to the simulated data and results from the 400 fitted LASSO models across the 100 simulations, including coefficients and performance values, per (dataset × scenario) combination. These files can total several GB and are fully reproducible from the input data via the scripts under `../scripts/`. Tracking them in Git would bloat the repository without benefit.
 
 Examples of files written to `intermediate/`:
 
