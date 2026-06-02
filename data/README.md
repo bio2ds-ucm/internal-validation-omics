@@ -64,7 +64,7 @@ RNA-sequencing data from invasive primary breast cancer tumors included in the S
 3. Place it in:
 
    ```
-   data/raw/GSE202203_rnaseq/GSE202203_RawCounts_gene_3207.tsv
+   data/raw/GSE202203_raw/
    ```
 
 4. Metadata is downloaded automatically by `scripts/GSE202203_code/1_GSE202203_data_processing.R` via `GEOquery`.
