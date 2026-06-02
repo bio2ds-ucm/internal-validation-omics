@@ -86,7 +86,7 @@ BiocManager::install(c("GEOquery", "affy", "primeviewhsentrezgcdf",
 
 ## 🚀 How to reproduce the analysis
 
-The full experiment is **computationally heavy** (≈ 1500 LASSO fits with nested tuning per dataset). It was run on a multi-core workstation with 50 cores (`ncores = 50` in `R/global_parameters.R` — adjust to your hardware). Plan for several hours per (dataset × scenario) combination.
+The full experiment is **computationally heavy**. It was run on a multi-core workstation with 50 cores (`ncores = 50` in `R/global_parameters.R` — adjust to your hardware). Plan for several hours per (dataset × scenario) combination.
 
 Run the pipeline in order. For each dataset:
 
@@ -137,7 +137,7 @@ If you use this code, please cite both the paper and the software archive (DOI t
 
 ```bibtex
 @article{peressini2026validation,
-  title   = {Internal validation strategies for high-dimensional transcriptomic prediction modeling},
+  title   = {Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study},
   author  = {Peressini M., Calviño A, Medrano E, Zugazagoitia J, Pineda, S.},
   journal = {Bioinformatics},
   year    = {2026},
@@ -146,7 +146,7 @@ If you use this code, please cite both the paper and the software archive (DOI t
 
 @software{peressini2026code,
   author    = {Peressini, Melina},
-  title     = {Code for: Internal validation strategies for high-dimensional transcriptomic prediction modeling},
+  title     = {Code for: Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study},
   year      = {2026},
   publisher = {Zenodo},
   doi       = {[Zenodo DOI]},
