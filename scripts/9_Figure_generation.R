@@ -1,9 +1,10 @@
 # DESCRIPTION:
 # Code for figure generation
 #
-# NOTE: this script generates figures for ONE dataset at a time. To generate
-# all figures of the paper, run it TWICE: once with dataset = "MMDx-Kidney dataset"
-# (uncommenting the appropriate line below) and once with dataset = "SCAN-B dataset".
+# NOTE: this script generates figures for ONE dataset at a time. 
+# To generate all figures of the paper, run it TWICE: 
+# - once with dataset <- "MMDx-Kidney dataset" (uncommenting the appropriate line below) 
+# - and once with dataset <- "SCAN-B dataset".
 
 # LIBRARIES ----
 library(here)
