@@ -302,7 +302,8 @@ repeated_cv <- function(x_matrix,
 # (i) apparent performance, 
 # (ii) performance on the original dataset
 # (iii) out-of-bag (OOB) performance,
-# required to obtain the final estimates from regular BS, .632 BS, and .632+ BS
+# and then averaging results 
+# (required to obtain the final estimates from regular BS, .632 BS, and .632+ BS)
 
 # - the full modelling pipeline, including penalty hyperparameter tuning, 
 # is repeated within each resampling iteration 
