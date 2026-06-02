@@ -9,7 +9,7 @@ library(dplyr)
 
 # LOAD DATA ----
 
-data <- readRDS(here::here("results", "intermediate", "GSE275126_data.rds"))
+data <- readRDS(here::here("data", "processed", "GSE275126_processed_data.rds"))
 
 # EXTRACT X_MATRIX AND Y_VECTOR ----
 
