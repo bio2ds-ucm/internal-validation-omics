@@ -21,7 +21,7 @@ k <- c(5, 10)
 # Number of repeats for repeated k-fold CV
 rep <- c(20, 10)
 
-# Number of bootstrap samples for bootstrapping
+# Number of bootstrap samples for bootstrap methods (regular BS, .632 BS, and .632+ BS)
 nboot <- 100
 
 # Number of cores (for parallelization)
