@@ -24,18 +24,18 @@ scripts/
 
 | Stage | Script | Purpose | Runtime |
 |---|---|---|---|
-| 1 | `1_*_data_processing.R` | Download from GEO + preprocess (normalize, transform). For MMDx-Kidney: RMA on CEL files. For SCAN-B: VST on raw counts. | minutes |
-| 2 | `2_*_simulated_scenarios.R` | Generate the three discrimination scenarios by permuting the outcome in 0% / 30% / 100% of samples. | < 1 min |
-| 3–5 | `3_*_execution_scenarioX.R` | **Heavy:** run the experiment for each scenario (≈ 500 LASSO fits with nested tuning, evaluated under 5 validation strategies). Can be run in parallel. | hours |
+| 1 | `1_*_data_processing.R` | Download from GEO + preprocess (normalize, transform). For MMDx-Kidney: RMA on CEL files. For SCAN-B: upper-quartile normalization and VST transformation on raw counts. | minutes |
+| 2 | `2_*_simulated_scenarios.R` | Generate the three discrimination scenarios by permuting the outcome in 0% / 30% / 100% of samples. | minutes |
+| 3–5 | `3_*_execution_scenarioX.R` | **Heavy:** run the experiment for each scenario (≈ 500 LASSO fits with nested tuning, evaluated under 5 validation strategies). Can be run in parallel. | **days** |
 | 6 | `6_*_UMAP.R` | UMAP for dataset characterization (Supplementary Figures S1, S2). | minutes |
-| 7 | `7_*_compute_estimates.R` | Consolidate scenario results into tidy data frames for figure generation. | < 5 min |
+| 7 | `7_*_compute_estimates.R` | Consolidate scenario results into tidy data frames for figure generation. | minutes |
 | 8 | `8_*_DGE_analysis.R` | Differential gene expression analysis with limma-trend for dataset characterization. | minutes |
 
 ## Final stage (shared)
 
 | Script | Purpose |
 |---|---|
-| `9_Figure_generation.R` | Generates all figures (Figs 1–6, S1–S12) and supplementary tables. **Must be run twice** — once for each dataset — by editing the `dataset` variable at the top of the script. |
+| `9_Figure_generation.R` | Generates all figures (Figs 1–6, S1–S12) and tables for Supplementary File. **Must be run twice** — once for each dataset — by editing the `dataset` variable at the top of the script. |
 
 ## Execution order
 
@@ -49,9 +49,9 @@ See the main [`../README.md`](../README.md) for the complete command sequence.
 
 ## Parallelization
 
-The experiment is computationally heavy. Several types of parallelization are used:
+The experiment is computationally heavy. Parallelization is used:
 
-- **Within R**: `fitting_and_validation()` (in `R/required_functions.R`) uses `furrr`/`future` and `parallel::mclapply()` to parallelize the simulations across cores. Adjust `ncores` in `R/global_parameters.R` (default: 50) to your hardware.
+- **Within R**: `fitting_and_validation()` (in `R/required_functions.R`) uses `furrr`/`future` to parallelize the simulations across cores. Adjust `ncores` in `R/global_parameters.R` (default: 50) to your hardware.
 - **Across scripts**: scripts 3, 4, 5 (the three scenario executions per dataset) are independent and can be launched in separate terminals or via `nohup` to run in parallel.
 
 ## Inputs and outputs
