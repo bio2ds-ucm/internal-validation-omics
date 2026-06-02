@@ -21,7 +21,7 @@ library(GEOquery)
 # Supplementary File GSE275126_RAW.tar)
 
 # Path for CEL files
-cel_path <- here::here("data", "raw", "GSE275126_microarray/")
+cel_path <- here::here("data", "raw", "GSE275126_raw")
 
 # Obtain CEL file names
 cel_names <- list.files(path = cel_path, 
@@ -35,12 +35,9 @@ eset <- justRMA(filenames = cel_names,
                 destructive = TRUE,
                 cdfname = "primeviewhsentrezgcdf")
 
-# 2. Extract and save expression matrix ----
+# 2. Extract expression matrix ----
 
 expr_mat <- exprs(eset)
-
-saveRDS(expr_mat,
-        here::here("results", "intermediate", "GSE275126_norm_matrix.rds"))
 
 # LOAD METADATA FROM GEO ----
 
