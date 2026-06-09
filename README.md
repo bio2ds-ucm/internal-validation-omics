@@ -1,7 +1,7 @@
 # Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: in preparation](https://img.shields.io/badge/status-in%20preparation-orange)](#)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20443008.svg)](https://doi.org/10.5281/zenodo.20443008)
 
 > Code and analysis pipeline accompanying the paper:
 >
@@ -14,10 +14,11 @@
 
 This repository contains the R code for a benchmark study of internal validation strategies (repeated *K*-fold cross-validation and bootstrap variants) applied to LASSO logistic regression in ultra-high dimensional (p ≫ n) transcriptomic settings.
 
-The study compares five standard resampling-based validation strategies — 20-rep 5-fold CV, 10-rep 10-fold CV, regular bootstrap, .632 bootstrap, and .632+ bootstrap — across three discrimination scenarios (excellent, moderate, null) simulated from two large-scale real-world transcriptomic datasets, evaluating both post-development performance estimation (AUC, calibration slope) and the impact of validation choice on penalty hyperparameter tuning 
-and model development.
+## 📋 Abstract
 
-> ⚠️ This README is preliminary. It will be updated with full abstract and results summary upon submission.
+Motivation: Resampling-based internal validation strategies are routinely used for hyperparameter tuning and post-development performance estimation in penalized regression. However, their behaviour in ultra-high dimensional transcriptomic settings (p≫n) remains poorly understood, and evidence from large real-world datasets is lacking.
+
+Results: Using two large transcriptomic datasets (MMDx-Kidney, n = 5 086; SCAN-B, n = 2 854) as reference populations to benchmark estimates against true performance, we evaluated repeated K-fold cross-validation (20-repeated 5-fold and 10-repeated 10-fold), regular bootstrap, .632 bootstrap and .632+ bootstrap for LASSO logistic prediction models. We defined three scenarios of varying signal-to-noise (excellent, moderate and null discrimination) by permuting outcome labels, then sampled 100 training sets of size 100 per scenario and estimated true performance on the large held-out data. Regular and .632 bootstrap systematically overestimated discrimination (AUC), with bias amplified under weaker signal and when used for tuning, where they promoted more complex models enriched in weakly informative genes. The .632+ bootstrap was the most accurate bootstrap variant, with lower bias and greater robustness, though it occasionally underestimated performance. Repeated K-fold cross-validation showed the lowest bias and produced sparser models. All strategies showed substantial variability, and reliable calibration slope estimation was not feasible in p≫n settings. We recommend repeated K-fold cross-validation as the default approach and emphasize reporting uncertainty measures alongside point estimates.
 
 ## 👥 Authors
 
@@ -149,7 +150,7 @@ If you use this code, please cite both the paper and the software archive (DOI t
   title     = {Code for: Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study},
   year      = {2026},
   publisher = {Zenodo},
-  doi       = {[Zenodo DOI]},
+  doi       = {10.5281/zenodo.20610890},
   url       = {https://github.com/bio2ds-ucm/internal-validation-omics}
 }
 ```
