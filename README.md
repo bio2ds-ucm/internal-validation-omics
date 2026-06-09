@@ -1,6 +1,7 @@
 # Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20443008.svg)](https://doi.org/10.5281/zenodo.20443008)
 
 > Code and analysis pipeline accompanying the paper:
