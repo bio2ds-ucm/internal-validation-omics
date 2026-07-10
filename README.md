@@ -6,7 +6,7 @@
 
 > Code and analysis pipeline accompanying the paper:
 >
-> **Peressini M., Calviño A, Medrano E, Zugazagoitia J, Pineda, S.** *Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study*. Submitted to *Bioinformatics*, 2026.
+> **Peressini M., Calviño A, Medrano E, Zugazagoitia J, Pineda, S.** *Internal Validation Strategies for LASSO Prediction Models in Ultra-High Dimensional Transcriptomic Settings: A Real-Data-Based Simulation Study*. Submitted to *BMC Bioinformatics*, 2026.
 >
 
 ---
